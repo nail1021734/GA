@@ -5,7 +5,6 @@ import copy
 
 
 def eval(x1, x2):
-    # return x1
     return ((x1**2 + x2**2)**0.25) * (sin(50 * (x1**2 + x2**2)**0.1)**2 + 1)
 
 def select(pop, scores, objective, k):
@@ -102,7 +101,7 @@ def GA(
 
 if __name__ == "__main__":
     best_li, _ = GA(n_pop=100, min_bound=0, max_bound=1, max_iter=10000,
-                    crossover_rate=0.25, mutation_rate=0.01, objective="min")
+                    crossover_rate=0.25, mutation_rate=0.01, objective="max")
     interval = 100
     for i in range(0, len(best_li), interval):
         print(

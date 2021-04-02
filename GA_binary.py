@@ -5,7 +5,6 @@ import copy
 
 
 def eval(x1, x2):
-    # return x1
     return ((x1**2 + x2**2)**0.25) * (sin(50 * (x1**2 + x2**2)**0.1)**2 + 1)
 
 
