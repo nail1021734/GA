@@ -4,8 +4,8 @@ from tqdm import tqdm
 import copy
 import matplotlib.pyplot as plt
 
-
 def eval(x1, x2):
+    # return x1
     return ((x1**2 + x2**2)**0.25) * (sin(50 * (x1**2 + x2**2)**0.1)**2 + 1)
 
 
@@ -72,9 +72,6 @@ def GA(
     bit_list = []
     iter_tqdm = tqdm(range(max_iter))
 
-    #######################test##
-    best_iter = 0
-    #######################test##
     for iteration in iter_tqdm:
         scores = [
             eval(
@@ -121,24 +118,19 @@ def GA(
         bit_list.append(pop[best_index])
         iter_tqdm.set_description(
             desc=f'iter:{iteration}, best_point:({best_x1:.5f}, {best_x2:.5f}), score:{best_score:.5f}')
-        if best_score < precision/10:
-            best_iter = iteration
-            break
 
         pop = child_list
 
-    return best_iter, bit_list, best_score_list, [best_x1, best_x2]
+    return bit_list, best_score_list, [best_x1, best_x2]
 
 
 if __name__ == "__main__":
-    test_time = 10
-
-    test_list = []
-    for iteration in [10, 100, 1000]:
-        best_list = []
-        for i in range(test_time):
-            best_iter, bit_li, best_li, _ = GA(n_pop=10, min_bound=0, max_bound=1, max_iter=iteration,
-                            crossover_rate=0.25, mutation_rate=0.01, objective="min")
-            best_list.append(min(best_li))
-        test_list.append(sum(best_list) / test_time)
-    print(test_list)
+    bit_li, best_li, _ = GA(n_pop=10, min_bound=0, max_bound=1, max_iter=1000,
+                    crossover_rate=0.25, mutation_rate=0.01, objective="min")
+    plt.plot(best_li)
+    plt.show()
+    # interval = 100
+    # for i in range(0, len(best_li), interval):
+    #     print(
+    #         f'iteration{i}-{i+interval-1} avg:{sum(best_li[i:i+interval])/len(best_li[i:i+interval])}')
+    # print(*bit_li, sep='\n')

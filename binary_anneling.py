@@ -89,24 +89,30 @@ def anneling_alg(
             now_point = new_point
 
         if cnt >= repeat_threshold:
-            return best_score[-1], (best_x1, best_x2)
+            return best_score[-2], (best_x1, best_x2)
 
     return best_score[-1], (best_x1, best_x2)
 
 
 if __name__ == '__main__':
-    best_score = []
-    best_point = []
-    obj = "max"
-    for T in [x / 1e5 for x in range(10, 0, -1)]:
-        for _ in range(1):
+    min_list = []
+    test_time = 10
+    for _ in range(test_time):
+        best_score = []
+        best_point = []
+        obj = "min"
+        for T in [x / 1e5 for x in range(100, 0, -1)]:
             score, point = anneling_alg(min_bound=0, max_bound=1, precision=1e-4,
-                                        objective=obj, T=T, repeat_threshold=1, max_iter=10000)
+                                        objective=obj, T=T, repeat_threshold=5, max_iter=100)
             best_score.append(score)
             best_point.append(point)
-    if obj == "min":
-        print(
-            f'min_value: {min(best_score)} at point {best_point[best_score.index(min(best_score))]}')
-    if obj == "max":
-        print(
-            f'max_value: {max(best_score)} at point {best_point[best_score.index(max(best_score))]}')
+        if obj == "min":
+            bp = best_point[best_score.index(min(best_score))]
+            print(
+                f'min_value: {min(best_score):.5f} at point ({bp[0]:.5f}, {bp[1]:.5f})')
+        if obj == "max":
+            bp = best_point[best_score.index(max(best_score))]
+            print(
+                f'max_value: {max(best_score):.5f} at point ({bp[0]:.5f}, {bp[1]:.5f})')
+        min_list.append(min(best_score))
+    print(sum(min_list) / test_time)

@@ -2,6 +2,7 @@ from random import randint, random, uniform
 from math import sin
 from tqdm import tqdm
 import copy
+import matplotlib.pyplot as plt
 
 
 def eval(x1, x2):
@@ -45,7 +46,7 @@ def GA(
     crossover_rate,
     mutation_rate,
     objective,
-    precision=1e-4,
+    precision=1e-3,
 ):
     pop = [[uniform(min_bound, max_bound) for _ in range(2)] for _ in range(n_pop)]
 
@@ -53,6 +54,9 @@ def GA(
     bit_list = []
     iter_tqdm = tqdm(range(max_iter))
 
+    #######################test##
+    best_iter = 0
+    #######################test##
     for iteration in iter_tqdm:
         scores = [eval(i[0], i[1]) for i in pop]
 
@@ -62,6 +66,8 @@ def GA(
         if n_pop % 2 == 1:
             child = mutation(
                 child=selected_parent[-1],
+                min_bound=min_bound,
+                max_bound=max_bound,
                 mutation_rate=mutation_rate
             )
             child_list.append(child)
@@ -93,16 +99,23 @@ def GA(
         best_score_list.append(best_score)
         iter_tqdm.set_description(
             desc=f'iter:{iteration}, best_point:({best_x1:.5f}, {best_x2:.5f}), score:{best_score:.5f}')
-
+        if best_score < precision:
+            best_iter = iteration
+            break
         pop = child_list
 
     return best_score_list, [best_x1, best_x2]
 
 
 if __name__ == "__main__":
-    best_li, _ = GA(n_pop=100, min_bound=0, max_bound=1, max_iter=10000,
-                    crossover_rate=0.25, mutation_rate=0.01, objective="max")
-    interval = 100
-    for i in range(0, len(best_li), interval):
-        print(
-            f'iteration{i}-{i+interval-1} avg:{sum(best_li[i:i+interval])/len(best_li[i:i+interval])}')
+    test_time = 10
+
+    test_list = []
+    for iteration in [10, 100, 1000]:
+        best_list = []
+        for i in range(test_time):
+            best_li, _ = GA(n_pop=10, min_bound=0, max_bound=1, max_iter=iteration,
+                            crossover_rate=0.25, mutation_rate=0.01, objective="min")
+            best_list.append(min(best_li))
+        test_list.append(sum(best_list) / test_time)
+    print(test_list)
